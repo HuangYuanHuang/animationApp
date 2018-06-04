@@ -1,10 +1,16 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Routes, RouterModule } from '@angular/router';
 
+import { CommonModule } from '@angular/common';
+import { ClockComponent } from './clock/clock.component';
+const routes: Routes = [
+  { path: 'h5clock', component: ClockComponent }
+];
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule.forRoot(routes)
   ],
-  declarations: []
+  declarations: [ClockComponent]
 })
 export class AnimationModule { }
