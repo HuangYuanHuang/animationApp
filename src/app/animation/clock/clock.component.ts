@@ -6,31 +6,64 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./clock.component.scss']
 })
 export class ClockComponent implements OnInit {
-  aag = [
-    [0x18, 0x24, 0x24, 0x24, 0x24, 0x24, 0x24, 0x18],
-    [0x00, 0x18, 0x1c, 0x18, 0x18, 0x18, 0x18, 0x18],
-    [0x00, 0x1e, 0x30, 0x30, 0x1c, 0x06, 0x06, 0x3e],
-    [0x00, 0x1e, 0x30, 0x30, 0x1c, 0x30, 0x30, 0x1e],
-    [0x00, 0x30, 0x38, 0x34, 0x32, 0x3e, 0x30, 0x30],
-    [0x00, 0x1e, 0x02, 0x1e, 0x30, 0x30, 0x30, 0x1e],
-    [0x00, 0x1c, 0x06, 0x1e, 0x36, 0x36, 0x36, 0x1c],
-    [0x00, 0x3f, 0x30, 0x18, 0x18, 0x0c, 0x0c, 0x0c],
-    [0x00, 0x1c, 0x36, 0x36, 0x1c, 0x36, 0x36, 0x1c],
-    [0x00, 0x1c, 0x36, 0x36, 0x36, 0x3c, 0x30, 0x1c]
+  mapData = [
+    [0xC3, 0xBD, 0xBD, 0xBD, 0xBD, 0xBD, 0xBD, 0xC3],
+    [0xEF, 0x8F, 0xEF, 0xEF, 0xEF, 0xEF, 0xEF, 0x01],
+    [0xC3, 0xBD, 0xBD, 0xFB, 0xF7, 0xEF, 0xDF, 0x81],
+    [0xC3, 0xBD, 0xFD, 0xE1, 0xE3, 0xFD, 0xBD, 0xC3],
+    [0xF7, 0xE7, 0xD7, 0xB7, 0x77, 0x01, 0xF7, 0xF7],
+    [0xC1, 0xDF, 0xDF, 0xC3, 0xFD, 0xFD, 0xBD, 0xC3],
+    [0xC3, 0xBF, 0xBF, 0x83, 0xBD, 0xBD, 0xBD, 0xC3],
+    [0x81, 0xBD, 0xFB, 0xF7, 0xEF, 0xEF, 0xEF, 0xEF],
+    [0xC3, 0xBD, 0xBD, 0xC3, 0xC3, 0xBD, 0xBD, 0xC3],
+    [0xC3, 0xBD, 0xBD, 0xBD, 0xC1, 0xFD, 0xFD, 0xC3]
   ];
   constructor() {
   }
   clockNodes = [];
+  currentNum = 0;
   ngOnInit() {
     const zr = zrender.init(document.getElementById('main'));
     for (let i = 1; i <= 8; i++) {
       for (let j = 1; j <= 8; j++) {
-        const node = new ClockNode(i, j);
+        const node = new ClockNode(j, i);
         this.clockNodes.push(node);
         zr.add(node.circle);
       }
     }
-    console.log(this.aag);
+    console.log(this.mapData);
+    console.log(this.getBinray(0x1c));
+
+    this.draw(0);
+    setInterval(() => {
+      this.currentNum = ++this.currentNum % 10;
+      this.draw(this.currentNum);
+    }, 1000);
+  }
+  draw(value: number) {
+    this.clockNodes.forEach(d => d.updateDefault());
+    const arr = this.mapData[value];
+    for (let row = 0; row < 8; row++) {
+      const bitArr = this.getBinray(arr[row]);
+      for (let col = 0; col < 8; col++) {
+        if (bitArr[col] !== 0) {
+          this.clockNodes[row * 8 + col].updateActive();
+        }
+      }
+    }
+  }
+  getBinray(value: number) {
+    let res = value.toString(2);
+    while (res.length < 8) {
+      res = '0' + res;
+    }
+    const resArr = [];
+    let index = 0;
+    while (index < 8) {
+      resArr.push(parseInt(res.substr(index, 1), 0));
+      index++;
+    }
+    return resArr;
   }
 
 }
@@ -38,10 +71,12 @@ export class ClockComponent implements OnInit {
 class ClockNode {
   public xOffset = 100;
   public yOffset = 50;
-  public shapeR = 40;
-  public marginOffset = 5;
+  public shapeR = 30;
+  public marginOffset = 0;
   public circle: any;
   public position = { x: 0, y: 0 };
+
+  public isActive = false;
   constructor(public xIndex: number, public yIndex: number) {
 
     this.position.x = this.xOffset + (xIndex - 1) * this.marginOffset + this.shapeR + (xIndex - 1) * 2 * this.shapeR;
@@ -53,9 +88,19 @@ class ClockNode {
         r: this.shapeR
       },
       style: {
-        fill: 'none',
-        stroke: '#F00'
+        fill: 'black',
+        stroke: 'white'
       }
     });
+  }
+  public updateDefault() {
+    if (this.isActive) {
+      this.circle.attr('style', { fill: 'black' });
+    }
+    this.isActive = false;
+  }
+  public updateActive() {
+    this.circle.attr('style', { fill: 'none' });
+    this.isActive = true;
   }
 }
