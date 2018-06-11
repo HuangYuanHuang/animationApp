@@ -1,11 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, Renderer2, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-clock',
   templateUrl: './clock.component.html',
   styleUrls: ['./clock.component.scss']
 })
-export class ClockComponent implements OnInit {
+export class ClockComponent implements OnInit, OnChanges {
   mapData = [
     [0xC3, 0xBD, 0xBD, 0xBD, 0xBD, 0xBD, 0xBD, 0xC3],
     [0xEF, 0x8F, 0xEF, 0xEF, 0xEF, 0xEF, 0xEF, 0x01],
@@ -18,12 +18,34 @@ export class ClockComponent implements OnInit {
     [0xC3, 0xBD, 0xBD, 0xC3, 0xC3, 0xBD, 0xBD, 0xC3],
     [0xC3, 0xBD, 0xBD, 0xBD, 0xC1, 0xFD, 0xFD, 0xC3]
   ];
-  constructor() {
-  }
+  @Input('canvasId') canvasId;
+  @Input('showNum') showNum;
+  @ViewChild('main') el: ElementRef;
+  private canvasHeight = '400px';
   clockNodes = [];
   currentNum = 0;
+  isLoad = false;
+  constructor(private render: Renderer2) {
+
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (this.isLoad) {
+      this.draw(changes['showNum'].currentValue);
+    }
+
+  }
   ngOnInit() {
-    const zr = zrender.init(document.getElementById('main'));
+
+    this.init();
+
+  }
+  init() {
+    const div = this.render.createElement('div');
+    this.render.setAttribute(div, 'id', this.canvasId);
+    this.render.setStyle(div, 'height', this.canvasHeight);
+    this.render.appendChild(this.el.nativeElement, div);
+    const zr = zrender.init(document.getElementById(this.canvasId));
     for (let i = 1; i <= 8; i++) {
       for (let j = 1; j <= 8; j++) {
         const node = new ClockNode(j, i);
@@ -35,10 +57,7 @@ export class ClockComponent implements OnInit {
     console.log(this.getBinray(0x1c));
 
     this.draw(0);
-    setInterval(() => {
-      this.currentNum = ++this.currentNum % 10;
-      this.draw(this.currentNum);
-    }, 1000);
+    this.isLoad = true;
   }
   draw(value: number) {
     this.clockNodes.forEach(d => d.updateDefault());
@@ -69,9 +88,9 @@ export class ClockComponent implements OnInit {
 }
 
 class ClockNode {
-  public xOffset = 100;
-  public yOffset = 50;
-  public shapeR = 30;
+  public xOffset = 0;
+  public yOffset = 0;
+  public shapeR = 5;
   public marginOffset = 0;
   public circle: any;
   public position = { x: 0, y: 0 };
