@@ -1,0 +1,15 @@
+<div id="sortCanvas" class="main">
+    <div *ngIf="isFirst" style="position: absolute;z-index: 12;top:20px">
+        <img src="/assets/img/sort.png">
+    </div>
+</div>
+<div style="margin: 10px" *ngIf="currentLength>0">
+    <p>
+        <ngb-progressbar type="success" [value]="currentIndex" [max]="currentLength"></ngb-progressbar>
+    </p>
+    <p style="text-align: center"> 比较次数：
+        <span class="badge badge-info">{{compareNum}} </span>
+        交换次数：
+        <span class="badge badge-danger">{{exchangeNum}}</span>
+    </p>
+</div>

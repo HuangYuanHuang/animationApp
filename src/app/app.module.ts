@@ -5,15 +5,19 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ViewModule } from './view/view.module';
+import { HomeComponent } from './home/home.component';
+import { SortFactoryService } from './service/sort-factory.service';
+
 @NgModule({
   declarations: [
     AppComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule, NgbModule.forRoot(), ViewModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [SortFactoryService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

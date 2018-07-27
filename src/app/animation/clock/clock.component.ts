@@ -53,9 +53,6 @@ export class ClockComponent implements OnInit, OnChanges {
         zr.add(node.circle);
       }
     }
-    console.log(this.mapData);
-    console.log(this.getBinray(0x1c));
-
     this.draw(0);
     this.isLoad = true;
   }

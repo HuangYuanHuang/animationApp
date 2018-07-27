@@ -1,0 +1,56 @@
+<div class="row" style="margin-left: 0px;margin-right: 0px;">
+  <div class="col-md-9 animation">
+    <app-sort-animation [animation]="animation" (sortFinishedEvent)="sortFinishedEvent()"></app-sort-animation>
+  </div>
+  <div class="col-md-3">
+    <form>
+      <div class="form-group">
+        <label for="exampleInputEmail1">排序数组</label>
+        <div>
+          <span class="badge badge-info" *ngFor="let item of sortNodes" style="margin-left: 5px;">{{item}}</span>
+        </div>
+
+      </div>
+      <div class="form-group">
+        <label for="annimationSeconds">动画间隔(毫秒)</label>
+        <input type="number" [(ngModel)]="animation" name="animation" class="form-control" id="annimationSeconds" placeholder="间隔时间"
+          min="10" max="10000">
+      </div>
+      <div class="form-group">
+        <label for="sortType">排序算法</label>
+        <select id="sortType" class="form-control" [(ngModel)]="sortType" name="sortType">
+          <option value="bubble">冒泡排序</option>
+          <option value="select">选择排序</option>
+        </select>
+      </div>
+      <div>
+        <button type="button" class="btn btn-info" (click)="changeArr()" [disabled]="updateBtn">更新数据</button>
+        <button type="button" class="btn btn-default" (click)="showCore(content)" style="margin-left: 10px">算法</button>
+        <button type="button" class="btn btn-primary" style="margin-left: 10px" [disabled]="playBtn" (click)="play()">开始演示</button>
+
+      </div>
+    </form>
+    <div>
+
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">核心算法</h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <div class="card" >
+          <img class="card-img-top" [src]="coreImage" alt="core image">
+      
+        </div>
+    <img >
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="c('Close click')">关闭</button>
+  </div>
+</ng-template>
