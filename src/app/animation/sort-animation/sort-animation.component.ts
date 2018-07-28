@@ -16,6 +16,8 @@ export class SortAnimationComponent implements OnInit, OnDestroy {
   currentIndex = 0;
   currentLength = 0;
   compareNum = 0;
+  compareTotalNum = 0;
+  exchangeTotalNum = 0;
   exchangeNum = 0;
   initNodeSubscribe;
   updateNodeSubscribe;
@@ -45,11 +47,13 @@ export class SortAnimationComponent implements OnInit, OnDestroy {
       $('div[class="progress"] div').removeAttr('style');
       this.compareNum = 0;
       this.exchangeNum = 0;
+      this.exchangeTotalNum = 0;
+      this.compareTotalNum = 0;
       // if (this.zrender) {
       //   this.zrender.dispose();
       // }
-      this.zrender = zrender.init(document.getElementById('sortCanvas'));
       this.isFirst = false;
+      this.zrender = zrender.init(document.getElementById('sortCanvas'));
       this.sorFactory.Sort([...node.data], node.type);
     });
   }
@@ -63,8 +67,10 @@ export class SortAnimationComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       if (node.newState === SortStateEnum.Compare) {
         this.compareNum++;
+        this.compareTotalNum = parseInt(this.compareNum / 2 + '', 0);
       } else if (node.newState === SortStateEnum.Exchange) {
         this.exchangeNum++;
+        this.exchangeTotalNum = parseInt(this.exchangeNum / 2 + '', 0);
       }
       this.sortNodes[node.index].update(node.newValue, node.newState);
       if (index + 1 <= maxLength) {
