@@ -5,10 +5,12 @@ import { CommonModule } from '@angular/common';
 import { AnimationModule } from '../animation/animation.module';
 import { ClockViewComponent } from './clock-view/clock-view.component';
 import { SortViewComponent } from './sort-view/sort-view.component';
+import { HanoiViewComponent } from './hanoi-view/hanoi-view.component';
 
 const routes: Routes = [
   { path: 'clock', component: ClockViewComponent },
-  { path: 'sort', component: SortViewComponent }
+  { path: 'sort', component: SortViewComponent },
+  { path: 'hanoi', component: HanoiViewComponent }
 ];
 @NgModule({
   imports: [
@@ -19,7 +21,8 @@ const routes: Routes = [
   ],
   declarations: [
     ClockViewComponent,
-    SortViewComponent
+    SortViewComponent,
+    HanoiViewComponent
   ]
 })
 export class ViewModule { }
