@@ -47,7 +47,7 @@ class Game {
     this._scene = new BABYLON.Scene(this._engine);
 
     // Create a FreeCamera, and set its position to (x:0, y:5, z:-10).
-    this._camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(0, 5, -10), this._scene);
+    this._camera = new BABYLON.FreeCamera('camera1', new BABYLON.Vector3(1, 5, 10), this._scene);
 
     // Target the camera to scene origin.
     this._camera.setTarget(BABYLON.Vector3.Zero());
@@ -57,17 +57,24 @@ class Game {
 
     // Create a basic light, aiming 0,1,0 - meaning, to the sky.
     this._light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this._scene);
+    // this._light.diffuse = new BABYLON.Color3(1, 2, 2);
+    // this._light.specular = new BABYLON.Color3(0, 0, 0);
 
     // Create a built-in "sphere" shape; with 16 segments and diameter of 2.
-    const sphere = BABYLON.MeshBuilder.CreateSphere('sphere',
-      { segments: 16, diameter: 2 }, this._scene);
+    // const sphere = BABYLON.MeshBuilder.CreateSphere('cylinder',
+    //   { segments: 16, diameter: 2 }, this._scene);
+    const cylinder = BABYLON.Mesh.CreateCylinder('cylinder', 1, 3, 3, 32, 1, this._scene, false, BABYLON.Mesh.DEFAULTSIDE);
+    cylinder.position = new BABYLON.Vector3(1, 2, 1);
+    const cylinder2 = BABYLON.Mesh.CreateCylinder('cylinder', 4, 2, 2, 32, 1, this._scene, false, BABYLON.Mesh.DEFAULTSIDE);
+    cylinder2.position = new BABYLON.Vector3(10, 12, 12);
+    BABYLON.Mesh.CreateCylinder('cylinder', 1, 1, 1, 32, 1, this._scene, false, BABYLON.Mesh.DEFAULTSIDE);
 
     // Move the sphere upward 1/2 of its height.
-    sphere.position.y = 1;
+    // sphere.position.y = 1;
 
     // Create a built-in "ground" shape.
-    const ground = BABYLON.MeshBuilder.CreateGround('ground',
-      { width: 6, height: 6, subdivisions: 2 }, this._scene);
+    // const ground = BABYLON.MeshBuilder.CreateGround('ground',
+    //   { width: 8, height: 8, subdivisions: 2 }, this._scene);
   }
 
   doRender(): void {
