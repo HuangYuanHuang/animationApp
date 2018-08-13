@@ -13,7 +13,9 @@
       "node_modules/@types"
     ],
     "types": [
-      "babylonjs"
+      "babylonjs",
+      "babylonjs-materials",
+      "babylonjs-gui"
     ],
     "lib": [
       "es2017",
