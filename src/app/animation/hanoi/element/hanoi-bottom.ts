@@ -26,8 +26,20 @@ export class HanoiBottom {
         let currIndex = 1;
         const materialBox = new BABYLON.StandardMaterial('cylinderColor', this.scene.scene);
         materialBox.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
-        for (let index = height; index >= 0; index--) {
+        for (let index = height; index > 0; index--) {
             this.children.push(new HanoiCylinder(`${this.name}_${index}`, this.scene, currIndex++, index, this.position, materialBox));
         }
+    }
+    getPushPosition(): BABYLON.Vector3 {
+
+        return new BABYLON.Vector3(this.position.x, this.position.y + this.children.length + 1, this.position.z);
+    }
+    Move(height: number, to: HanoiBottom) {
+        if (this.children.length > 0) {
+            const top = this.children.pop();
+            top.refresh(to.getPushPosition());
+            to.children.push(top);
+        }
+
     }
 }
