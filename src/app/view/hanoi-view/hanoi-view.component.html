@@ -1,3 +1,50 @@
-<div>
-  <app-hanoi></app-hanoi>
+<div class="row" style="margin-left: 0px;margin-right: 0px;">
+  <div class="col-md-9 animation">
+    <app-hanoi #appHanoi (updateProgerss)="updateProgerss($event)"></app-hanoi>
+  </div>
+  <div class="col-md-3">
+
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="hanoiHeight">汉诺塔层数</nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <nz-radio-group [(ngModel)]="hanoiHeight" formControlName="hanoiHeight">
+            <label nz-radio-button nzValue="2">2层</label>
+            <label nz-radio-button nzValue="3">3层</label>
+            <label nz-radio-button nzValue="5">5层</label>
+            <label nz-radio-button nzValue="8">8层</label>
+            <label nz-radio-button nzValue="10">10层</label>
+          </nz-radio-group>
+
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="seconds">动画间隔(毫秒)
+          <nz-tooltip nzTitle="动画间隔20-5000毫秒之间">
+            <i nz-tooltip class="anticon anticon-question-circle-o"></i>
+          </nz-tooltip>
+
+        </nz-form-label>
+        <nz-form-control [nzSm]="14" [nzXs]="24">
+          <input nz-input formControlName="seconds" type="number" min="20" max="5000" [(ngModel)]="seconds">
+          <nz-form-explain *ngIf="validateForm.get('seconds').dirty && validateForm.get('seconds').errors">输入不合法！</nz-form-explain>
+        </nz-form-control>
+      </nz-form-item>
+
+
+      <nz-form-item>
+        <nz-form-control [nzSm]="14" [nzXs]="24" [nzOffset]="6">
+          <button nz-button nzType="primary" [nzLoading]="isStart">开始</button>
+        </nz-form-control>
+
+
+      </nz-form-item>
+    </form>
+
+    <div style="margin-top: 200px;text-align: center" *ngIf="isStart">
+      <nz-progress [nzPercent]="currentpercent" nzType="circle"></nz-progress>
+
+    </div>
+
+  </div>
 </div>

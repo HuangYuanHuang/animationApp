@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { HanoiScene } from './scene/hanoi-scene';
 import { HanoiBottom } from './element/hanoi-bottom';
 import * as BABYLON from 'babylonjs';
@@ -12,13 +12,22 @@ export class HanoiComponent implements OnInit {
 
   maxNum = 10;
   data = [];
+  @Output() updateProgerss = new EventEmitter<number>();
+  seconds = 0;
   constructor() { }
   ngOnInit() {
 
+
+  }
+
+  start(num: number, seconds: number) {
+    this.data = [];
+    this.maxNum = num;
+    this.seconds = seconds;
     const game = new HanoiScene('renderCanvas');
-    const hanoiA = new HanoiBottom(game, this.maxNum, 'HanoiA', new BABYLON.Vector3(-10, -5, 0));
-    const hanoiB = new HanoiBottom(game, this.maxNum, 'HanoiB', new BABYLON.Vector3(-10, -5, 15));
-    const hanoiC = new HanoiBottom(game, this.maxNum, 'HanoiC', new BABYLON.Vector3(-15, -5, 30));
+    const hanoiA = new HanoiBottom(game, this.maxNum, 'HanoiA', new BABYLON.Vector3(-10, -5, 0), seconds);
+    const hanoiB = new HanoiBottom(game, this.maxNum, 'HanoiB', new BABYLON.Vector3(-10, -5, 15), seconds);
+    const hanoiC = new HanoiBottom(game, this.maxNum, 'HanoiC', new BABYLON.Vector3(-15, -5, 30), seconds);
 
     hanoiA.buildHanoiHeight(this.maxNum);
     game.doRender();
@@ -27,17 +36,22 @@ export class HanoiComponent implements OnInit {
     this.playAnim(0, this.data.length);
   }
 
-  playAnim(index: number, len: number) {
+  private playAnim(index: number, len: number) {
     if (index < len) {
       setTimeout(() => {
         const data = this.data[index];
         data.from.Move(data.value, data.to);
+        if (this.updateProgerss) {
+          this.updateProgerss.emit((index + 1) * 100 / len);
+        }
         this.playAnim(index + 1, len);
-      }, 200);
+      }, this.seconds * 10);
+    } else {
+      this.updateProgerss.emit(100);
     }
   }
 
-  hanoiCore(index: number, A: HanoiBottom, B: HanoiBottom, C: HanoiBottom) {
+  private hanoiCore(index: number, A: HanoiBottom, B: HanoiBottom, C: HanoiBottom) {
     if (index === 1) {
       this.data.push({ from: A, value: index, to: C });
       return;

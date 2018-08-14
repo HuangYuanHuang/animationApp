@@ -7,7 +7,7 @@ export class HanoiCylinder {
     private animation: BABYLON.Animation;
     constructor(private name: string, private scene: HanoiScene,
         public cylinderIndex: number, private width: number, private parentPosition: BABYLON.Vector3,
-        private color: BABYLON.StandardMaterial) {
+        private color: BABYLON.StandardMaterial, private animationSeconds = 20) {
         this.cylinder = BABYLON.Mesh.CreateCylinder(name, 1, width, width, 32, 1,
             scene.scene, false, BABYLON.Mesh.DEFAULTSIDE);
         this.position = new BABYLON.Vector3(parentPosition.x, parentPosition.y + cylinderIndex, parentPosition.z);
@@ -27,10 +27,10 @@ export class HanoiCylinder {
     refresh(newPosition: BABYLON.Vector3) {
         const keys = [
             { frame: 0, value: this.position },
-            { frame: 20, value: newPosition }
+            { frame: this.animationSeconds, value: newPosition }
         ];
         this.animation.setKeys(keys);
         this.position = new BABYLON.Vector3(newPosition.x, newPosition.y, newPosition.z);
-        this.scene.scene.beginAnimation(this.cylinder, 0, 20, false);
+        this.scene.scene.beginAnimation(this.cylinder, 0, this.animationSeconds, false);
     }
 }
